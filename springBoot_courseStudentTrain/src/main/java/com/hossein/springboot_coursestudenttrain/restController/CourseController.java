@@ -25,6 +25,7 @@ public class CourseController {
 
     @PostMapping("/add")
     public CourseModel addCourse(@RequestBody CourseModel courseModel) {
+
         return courseMapper.convertToModel(courseService.save(courseMapper.convertToEntity(courseModel)));
     }
 
@@ -38,9 +39,16 @@ public class CourseController {
         return courseMapper.convertToModel(courseService.findById(id));
     }
 
+    //    @GetMapping("/findAll")
+//    public List<CourseModel> findAllCourse() {
+//        return courseMapper.convertListToListModel(courseService.findAll());
+//    }
     @GetMapping("/findAll")
     public List<CourseModel> findAllCourse() {
-        return courseMapper.convertListToListModel(courseService.findAll());
+        List<CourseEntity> all = courseService.findAll();
+        List<CourseModel> courseModels = courseMapper.convertListToListModel(all);
+        return courseModels;
+
     }
 
 

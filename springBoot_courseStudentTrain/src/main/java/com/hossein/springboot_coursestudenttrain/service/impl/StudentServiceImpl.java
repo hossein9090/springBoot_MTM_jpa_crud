@@ -3,6 +3,8 @@ package com.hossein.springboot_coursestudenttrain.service.impl;
 
 import com.hossein.springboot_coursestudenttrain.entity.CourseEntity;
 import com.hossein.springboot_coursestudenttrain.entity.StudentEntity;
+import com.hossein.springboot_coursestudenttrain.exception.EntityNotFoundExceptionById;
+import com.hossein.springboot_coursestudenttrain.exception.IdNullException;
 import com.hossein.springboot_coursestudenttrain.repo.StudentRepo;
 import com.hossein.springboot_coursestudenttrain.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentEntity findById(Long id) {
+        if (id == null) {
+            throw new IdNullException("Id is null");
+        }
+        if (!existsById(id)) {
+            throw new EntityNotFoundExceptionById("Id not exist");
+        }
         StudentEntity byId = studentRepo.findById(id).get();
         return byId;
     }
@@ -48,6 +56,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void delete(Long id) {
+        if (!existsById(id)) {
+            throw new EntityNotFoundExceptionById("Id not exist");
+        }
         studentRepo.deleteById(id);
     }
 
@@ -60,11 +71,17 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentEntity> findStudentEntitiesByCoursesId(Long courseId) {
+        if (courseId == null) {
+            throw new IdNullException("the courseId is null");
+        }
         return studentRepo.findStudentEntitiesByCoursesId(courseId);
     }
 
     @Override
     public boolean existsById(Long id) {
+        if (id == null) {
+            throw new IdNullException("Id is null");
+        }
         return studentRepo.existsById(id);
     }
 
